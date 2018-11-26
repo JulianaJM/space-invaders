@@ -1,6 +1,12 @@
 import CanvasInvaders from "./view/Canvas";
 
 const canvas = new CanvasInvaders();
+let frameIndex = 0,
+  tickCount = 0,
+  ticksPerFrame = 60,
+  numberOfFrames = 2,
+  loop = 60;
+
 const UpdateGameArea = () => {
   window.requestAnimationFrame(UpdateGameArea);
 
@@ -11,42 +17,45 @@ const UpdateGameArea = () => {
       canvas.canvasElem.width,
       canvas.canvasElem.height
     );
-    canvas.draw();
+    canvas.loadInvaders();
   } else {
+    update();
     render();
+  }
+};
+
+const update = () => {
+  tickCount += 1;
+
+  if (tickCount > ticksPerFrame) {
+    tickCount = 0;
+
+    // If the current frame index is in range
+    if (frameIndex < numberOfFrames - 1) {
+      // Go to the next frame
+      frameIndex += 1;
+    } else if (loop) {
+      frameIndex = 0;
+    }
   }
 };
 
 const render = () => {
   canvas.ctx.clearRect(0, 0, canvas.canvasElem.width, canvas.canvasElem.height);
-  for (var i = 0; i < canvas.stateOneImages.length; i++) {
-    var entity = canvas.stateOneImages[i];
+  for (var i = 0; i < canvas.images.length; i++) {
+    var entity = canvas.images[i];
     canvas.ctx.drawImage(
       entity.image,
+      (frameIndex * entity.spriteWidth) / numberOfFrames,
+      0,
+      canvas.canvasElem.width / numberOfFrames,
+      canvas.canvasElem.height,
       entity.x,
       entity.y,
-      entity.width,
+      entity.width / numberOfFrames,
       entity.height
     );
   }
-  console.log("1");
-  renderTwo();
-};
-
-const renderTwo = () => {
-  canvas.ctx.clearRect(0, 0, canvas.canvasElem.width, canvas.canvasElem.height);
-  for (var i = 0; i < canvas.stateTwoImages.length; i++) {
-    // Draw the entity
-    var entity = canvas.stateTwoImages[i];
-    canvas.ctx.drawImage(
-      entity.image,
-      entity.x,
-      entity.y,
-      entity.width,
-      entity.height
-    );
-  }
-  console.log("2");
 };
 
 UpdateGameArea();
