@@ -1,11 +1,23 @@
 import CanvasInvaders from "./view/Canvas";
 
 const canvas = new CanvasInvaders();
-let frameIndex = 0,
-  tickCount = 0,
-  ticksPerFrame = 60,
-  numberOfFrames = 2,
-  loop = 60;
+
+//we are having one rows and 2 cols in the current sprite sheet
+const rows = 1;
+const cols = 2;
+
+//Each row contains 2 frame and at start we will display the first frame (assuming the index from 0)
+let curFrame = 0;
+
+//The total frame is 2
+const frameCount = 2;
+
+//x and y coordinates of the canvas to get the single frame
+let srcX = 0;
+let srcY = 0;
+
+//Speed of the movement
+const speed = 60;
 
 const UpdateGameArea = () => {
   window.requestAnimationFrame(UpdateGameArea);
@@ -19,41 +31,46 @@ const UpdateGameArea = () => {
     );
     canvas.loadInvaders();
   } else {
-    update();
+    updateFrame();
     render();
   }
 };
 
-const update = () => {
-  tickCount += 1;
+const updateFrame = (width, height, x, y) => {
+  //Updating the frame index
+  curFrame = ++curFrame % frameCount;
 
-  if (tickCount > ticksPerFrame) {
-    tickCount = 0;
+  //Calculating the x coordinate for spritesheet
+  srcX = curFrame * width;
 
-    // If the current frame index is in range
-    if (frameIndex < numberOfFrames - 1) {
-      // Go to the next frame
-      frameIndex += 1;
-    } else if (loop) {
-      frameIndex = 0;
-    }
-  }
+  //Clearing the drawn frame
+  canvas.ctx.clearRect(x, y, width, height);
 };
 
 const render = () => {
-  canvas.ctx.clearRect(0, 0, canvas.canvasElem.width, canvas.canvasElem.height);
-  for (var i = 0; i < canvas.images.length; i++) {
-    var entity = canvas.images[i];
+  for (let i = 0; i < canvas.images.length; i++) {
+    const img = canvas.images[i];
+
+    //To get the width of a single sprite we divided the width of sprite with the number of cols
+    //because all the sprites are of equal width and height
+    const width = img.spriteWidth / cols;
+    //Same for the height we divided the height with number of rows
+    const height = img.spriteHeigth / rows;
+
+    //Updating the frame
+    updateFrame(width, height, img.x, img.y);
+    //Drawing the image
+    //x and y coordinates to render the sprite
     canvas.ctx.drawImage(
-      entity.image,
-      (frameIndex * entity.spriteWidth) / numberOfFrames,
-      0,
-      canvas.canvasElem.width / numberOfFrames,
-      canvas.canvasElem.height,
-      entity.x,
-      entity.y,
-      entity.width / numberOfFrames,
-      entity.height
+      img.image,
+      srcX,
+      srcY,
+      width,
+      height,
+      img.x,
+      img.y,
+      img.width,
+      img.height
     );
   }
 };

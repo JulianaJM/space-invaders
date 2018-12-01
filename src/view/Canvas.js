@@ -12,7 +12,7 @@ export default class CanvasElemInvaders {
     document.getElementById("canvas-invaders").append(this.canvasElem);
   }
 
-  loadImage(pathToImage, x, y, spriteWidth) {
+  loadImage(pathToImage, x, y, spriteWidth, spriteHeigth) {
     const img = new Image(); // Create new img element
     img.onload = () => {
       //this.ctx.drawImage(img, x, y, 30, 30);
@@ -28,9 +28,10 @@ export default class CanvasElemInvaders {
       image: img,
       x,
       y,
-      width: 250,
-      height: 250,
-      spriteWidth
+      width: 30,
+      height: 30,
+      spriteWidth,
+      spriteHeigth
     });
   }
 
@@ -38,15 +39,15 @@ export default class CanvasElemInvaders {
     let x = 0;
     for (let i = 0; i < 11; i++) {
       // the top row scores 30 points
-      this.loadImage("./public/assets/images/sprite3.png", x, 0, 120);
+      this.loadImage("./public/assets/images/sprite3.png", x, 0, 120, 61);
 
       // the middle 2 rows 20 points for each medium invader
-      this.loadImage("./public/assets/images/sprite2.png", x, 30, 144);
-      this.loadImage("./public/assets/images/sprite2.png", x, 60, 144);
+      this.loadImage("./public/assets/images/sprite2.png", x, 30, 148, 58);
+      this.loadImage("./public/assets/images/sprite2.png", x, 60, 148, 58);
 
       // the bottom 2 rows score 10 points per large invader
-      this.loadImage("./public/assets/images/sprite1.png", x, 90, 154);
-      this.loadImage("./public/assets/images/sprite1.png", x, 120, 154);
+      this.loadImage("./public/assets/images/sprite1.png", x, 90, 154, 53);
+      this.loadImage("./public/assets/images/sprite1.png", x, 120, 154, 53);
       x += 30;
     }
   }
