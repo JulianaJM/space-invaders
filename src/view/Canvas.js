@@ -1,4 +1,4 @@
-let loadtotal = 110;
+let loadtotal = 55;
 let loadcount = 0;
 export default class CanvasElemInvaders {
   constructor() {
@@ -7,47 +7,56 @@ export default class CanvasElemInvaders {
     this.canvasElem.height = screen.height - screen.height * 0.55;
     this.ctx = this.canvasElem.getContext("2d");
     this.images = [];
-    this.isImgLoaded = false;
 
     document.getElementById("canvas-invaders").append(this.canvasElem);
   }
 
-  loadImage(pathToImage, x, y, spriteWidth, spriteHeigth) {
+  loadImage(pathToImage, x, y, spriteWidth, spriteHeigth, updateFrame) {
     const img = new Image(); // Create new img element
+    img.src = pathToImage; // Set source path
+
     img.onload = () => {
-      //this.ctx.drawImage(img, x, y, 30, 30);
       loadcount++;
-      if (loadcount == loadtotal) {
+      console.log(loadcount);
+      if (loadcount === loadtotal) {
         // Done loading
-        this.isImgLoaded = true;
         console.log("done loaded");
+        updateFrame && updateFrame();
       }
     };
-    img.src = pathToImage; // Set source path
+
     this.images.push({
       image: img,
       x,
       y,
-      width: 30,
-      height: 30,
+      width: 20,
+      height: 20,
       spriteWidth,
       spriteHeigth
     });
   }
 
-  loadInvaders() {
+  loadInvaders(updateFrame) {
     let x = 0;
     for (let i = 0; i < 11; i++) {
       // the top row scores 30 points
-      this.loadImage("./public/assets/images/sprite3.png", x, 0, 120, 61);
+      this.loadImage("./public/assets/images/sprite3.png", x, 0, 60, 61);
 
       // the middle 2 rows 20 points for each medium invader
-      this.loadImage("./public/assets/images/sprite2.png", x, 30, 148, 58);
-      this.loadImage("./public/assets/images/sprite2.png", x, 60, 148, 58);
+      this.loadImage("./public/assets/images/sprite2.png", x, 30, 74, 58);
+      this.loadImage("./public/assets/images/sprite2.png", x, 60, 74, 58);
 
       // the bottom 2 rows score 10 points per large invader
-      this.loadImage("./public/assets/images/sprite1.png", x, 90, 154, 53);
-      this.loadImage("./public/assets/images/sprite1.png", x, 120, 154, 53);
+      this.loadImage("./public/assets/images/sprite1.png", x, 90, 80, 53);
+
+      this.loadImage(
+        "./public/assets/images/sprite1.png",
+        x,
+        120,
+        80,
+        53,
+        updateFrame // call on the last load to draw
+      );
       x += 30;
     }
   }
