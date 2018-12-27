@@ -3,8 +3,8 @@ let loadcount = 0;
 export default class CanvasElemInvaders {
   constructor() {
     this.canvasElem = document.createElement("canvas");
-    this.canvasElem.width = screen.width - screen.width * 0.75;
-    this.canvasElem.height = screen.height - screen.height * 0.55;
+    // this.canvasElem.width = screen.width * 0.35;
+    this.canvasElem.height = screen.height * 0.25;
     this.ctx = this.canvasElem.getContext("2d");
     this.images = [];
 
@@ -14,7 +14,7 @@ export default class CanvasElemInvaders {
   loadImage(pathToImage, x, y, spriteWidth, spriteHeigth, updateFrame) {
     const img = new Image(); // Create new img element
     img.src = pathToImage; // Set source path
-
+    const imageElem = document.getElementById("img");
     img.onload = () => {
       loadcount++;
       console.log(loadcount);
@@ -29,15 +29,15 @@ export default class CanvasElemInvaders {
       image: img,
       x,
       y,
-      width: 20,
-      height: 20,
+      width: imageElem.width,
+      height: imageElem.height,
       spriteWidth,
       spriteHeigth
     });
   }
 
   loadInvaders(updateFrame) {
-    let x = 0;
+    let x = this.canvasElem.width / 7;
     for (let i = 0; i < 11; i++) {
       // the top row scores 30 points
       this.loadImage("./public/assets/images/sprite3.png", x, 0, 60, 61);
@@ -57,7 +57,26 @@ export default class CanvasElemInvaders {
         53,
         updateFrame // call on the last load to draw
       );
-      x += 30;
+      x += 20;
+    }
+  }
+
+  drawFrame(srcX) {
+    //srcX = x and srcY = y coordinates of the canvas to get the single frame
+    const srcY = 0;
+    for (let i = 0; i < this.images.length; i++) {
+      const img = this.images[i];
+      this.ctx.drawImage(
+        img.image,
+        srcX * img.spriteWidth,
+        srcY * img.spriteHeigth,
+        img.spriteWidth, //single img width
+        img.spriteHeigth, //single img heigth
+        img.x,
+        img.y,
+        img.width,
+        img.height
+      );
     }
   }
 }

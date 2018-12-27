@@ -10,41 +10,22 @@ let frameCount = 0;
 const updateFrame = () => {
   frameCount++;
   if (frameCount < speed) {
-    window.requestAnimationFrame(updateFrame);
+    requestAnimationFrame(updateFrame);
     return;
   }
   frameCount = 0;
   canvas.ctx.clearRect(0, 0, canvas.canvasElem.width, canvas.canvasElem.height);
-  render(cycleLoop[currentLoopIndex]);
+  canvas.drawFrame(cycleLoop[currentLoopIndex]);
   currentLoopIndex++;
   if (currentLoopIndex >= cycleLoop.length) {
     currentLoopIndex = 0;
   }
-  window.requestAnimationFrame(updateFrame);
+
+  requestAnimationFrame(updateFrame);
 };
 
 const updateGameArea = () => {
-  window.requestAnimationFrame(updateFrame);
-};
-
-const render = srcX => {
-  //srcX = x and srcY = y coordinates of the canvas to get the single frame
-  const srcY = 0;
-
-  for (let i = 0; i < canvas.images.length; i++) {
-    const img = canvas.images[i];
-    canvas.ctx.drawImage(
-      img.image,
-      srcX * img.spriteWidth,
-      srcY * img.spriteHeigth,
-      img.spriteWidth,
-      img.spriteHeigth,
-      img.x,
-      img.y,
-      img.width,
-      img.height
-    );
-  }
+  requestAnimationFrame(updateFrame);
 };
 
 canvas.loadInvaders(updateFrame);
